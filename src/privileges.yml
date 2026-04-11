@@ -1,0 +1,18 @@
+dashboard:
+  - { read: 'Read dashboard data' }
+  - { set_widget: 'Customize dashboard widgets' }
+  - { statistic: 'View dashboard statistics' }
+privilege:
+  - { read: 'Read system privileges' }
+  - { write: 'Write modification of system privileges' }
+  - { delete: 'Delete system privileges' }
+role:
+  - { read: 'Read role data' }
+  - { write: 'Write modification of role data' }
+  - { delete: 'Delete role records' }
+  - { set_privilege: 'Assign privileges to roles' }
+user:
+  - { read: 'Read user data' }
+  - { write: 'Write modification of user data' }
+  - { delete: 'Delete user records' }
+  - { set_role: 'Assign roles to users' }

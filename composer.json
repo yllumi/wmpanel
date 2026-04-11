@@ -1,0 +1,16 @@
+{
+  "name": "yllumi/wmpanel",
+  "type": "library",
+  "license": "MIT",
+  "description": "Webman plugin yllumi/wmpanel",
+  "require": {
+  },
+  "autoload": {
+    "psr-4": {
+      "Yllumi\\Wmpanel\\": "src"
+    },
+    "files": [
+      "src/app/helper/sidebar.php"
+    ]
+  }
+}

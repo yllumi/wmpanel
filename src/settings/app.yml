@@ -1,0 +1,117 @@
+name: App Setting
+slug: app
+menu_position: 40
+setting:
+  auth_logo:
+    field: auth_logo
+    label: Auth Page Logo
+    form: image
+  navbar_logo:
+    field: navbar_logo
+    label: Navbar Logo
+    form: image
+  color_theme:
+    field: color_theme
+    label: Frontend Color Theme
+    form: color
+    default: "#F44336"
+  navbar_color:
+    field: navbar_color
+    label: Frontend Navbar Color
+    form: color
+    default: "#FFFFFF"
+  transparent_navbar:
+    field: transparent_navbar
+    label: Transparent Navbar Before Scroll
+    form: switcher
+    default: 0
+    options:
+      0: No
+      1: Yes
+  navbar_text_color:
+    field: navbar_text_color
+    label: Frontend Navbar Text Color
+    form: color
+    default: "#333333"
+  link_color:
+    field: link_color
+    label: Frontend Link Color
+    form: color
+    default: "#E84A94"
+  enable_bottommenu:
+    field: enable_bottommenu
+    label: Enable Bottom Menu
+    form: switcher
+    default: 0
+    options:
+      0: No
+      1: Yes
+  bottommenu_color:
+    field: bottommenu_color
+    label: Bottom Menu Link Color
+    form: color
+    default: "#E84A94"
+  highlight_center_bottommenu:
+    field: highlight_center_bottommenu
+    label: Highlight Center Bottommenu
+    description: Set Yes to make middle (third of five) bottom menu highlighted
+    form: switcher
+    default: 0
+    options:
+      0: No
+      1: Yes
+  app_background:
+    field: app_background
+    label: App Background
+    form: image
+  darkmode:
+    field: darkmode
+    label: Use Darkmode
+    form: switcher
+    default: 0
+    options:
+      0: No
+      1: yes
+  enable_pjax:
+    field: enable_pjax
+    label: Enable PJAX for App Page (experimental)
+    dev_purpose: true
+    form: switcher
+    default: 0
+    options:
+      0: Off
+      1: On
+  gtag_id:
+    field: gtag_id
+    label: Google Tag ID
+    form: text
+  enable_sw:
+    field: enable_sw
+    label: Enable Service Worker
+    form: switcher
+    options:
+      0: Off
+      1: On
+    default: 0
+    dev_purpose: true
+  manifest:
+    field: manifest
+    label: Manifest Content (manifest.json)
+    form: code
+    mode: json
+  assetlinks:
+    field: assetlinks
+    label: Digital Asset Links JSON content
+    form: code
+    mode: json
+    height: 200
+    dev_purpose: true
+  custom_scripts:
+    field: custom_scripts
+    label: Custom Scripts
+    desc: wajib dibuka dengan tag <code>&lt;script n:syntax="off"&gt;</code>
+    form: textarea
+    default: |
+      <script n:syntax="off">
+
+      </script>

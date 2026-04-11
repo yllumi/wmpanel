@@ -1,0 +1,16 @@
+name: Plugins
+slug: plugin
+menu_position: 50
+setting:
+  enabled_modules:
+    field: enabled_modules
+    label: Enabled Modules
+    form: code
+    mode: yaml
+    dev_purpose: true
+  disabled_entries:
+    field: disabled_entries
+    label: Disabled Entries
+    form: code
+    mode: yaml
+    dev_purpose: true
