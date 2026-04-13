@@ -16,7 +16,7 @@ class AuthController extends AdminController
             return redirect('/panel');
         }
         $data['page_title'] = 'Login';
-        return render('auth/login', $data, 'auth');
+        return render('auth/login', $data, null, 'auth');
     }
 
     // ── POST /panel/auth/login ─────────────────────────────

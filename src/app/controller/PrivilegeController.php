@@ -169,7 +169,7 @@ class PrivilegeController extends AdminController
         $all[] = ['feature' => $feature, 'privilege' => $privilege, 'description' => $description];
         $this->savePrivileges($all);
 
-        return json(['success' => 1, 'message' => 'Privilege berhasil ditambahkan.', 'redirect' => '/panel/privilege/index']);
+        return json(['success' => 1, 'message' => 'Privilege berhasil ditambahkan.', 'redirect' => '/panel/privilege']);
     }
 
     #[RequirePrivilege('privilege.write')]
@@ -186,7 +186,7 @@ class PrivilegeController extends AdminController
             }
         }
 
-        if (!$item) return redirect('/panel/privilege/index');
+        if (!$item) return redirect('/panel/privilege');
 
         $this->data['page_title'] = 'Edit Privilege';
         $this->data['privilege']  = (object) array_merge($item, ['key' => $key]);
@@ -231,7 +231,7 @@ class PrivilegeController extends AdminController
         if (!$found) return json(['success' => 0, 'message' => 'Privilege tidak ditemukan.']);
 
         $this->savePrivileges($all);
-        return json(['success' => 1, 'message' => 'Privilege berhasil diperbarui.', 'redirect' => '/panel/privilege/index']);
+        return json(['success' => 1, 'message' => 'Privilege berhasil diperbarui.', 'redirect' => '/panel/privilege']);
     }
 
     #[RequirePrivilege('privilege.delete')]

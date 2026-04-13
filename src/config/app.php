@@ -3,6 +3,8 @@
 use support\Request;
 
 return [
+    'enable' => true,
+    
     'debug' => true,
     'controller_suffix' => 'Controller',
     'controller_reuse' => false,

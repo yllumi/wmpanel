@@ -1,9 +1,16 @@
 {
   "name": "yllumi/wmpanel",
-  "type": "library",
+  "type": "composer-plugin",
   "license": "MIT",
   "description": "Webman plugin yllumi/wmpanel",
   "require": {
+    "composer-plugin-api": "^2.0"
+  },
+  "require-dev": {
+    "composer/composer": "^2.0"
+  },
+  "extra": {
+    "class": "Yllumi\\Wmpanel\\ComposerPlugin"
   },
   "autoload": {
     "psr-4": {
