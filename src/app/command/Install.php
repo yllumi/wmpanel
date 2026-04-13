@@ -20,6 +20,10 @@ class Install extends Command
             return Command::FAILURE;
         }
 
+        if (!$this->runInstallSeeder($output)) {
+            return Command::FAILURE;
+        }
+
         $this->publishFiles($output);
 
         $output->writeln('<info>[wmpanel]</info> Installation complete.');
@@ -29,16 +33,7 @@ class Install extends Command
     protected function runInstallMigration(OutputInterface $output): bool
     {
         $projectRoot = base_path();
-        $rootConfigFile = $projectRoot . '/config/migration.php';
-        $pluginConfigDir = $projectRoot . '/config/plugin/yllumi/wmpanel';
         $migrationDir = $projectRoot . '/vendor/yllumi/wmpanel/src/database/migrations';
-        $pluginConfigFile = $pluginConfigDir . '/migration.php';
-        $configFile = is_file($rootConfigFile) ? $rootConfigFile : $pluginConfigFile;
-
-        if (!is_file($configFile)) {
-            $output->writeln('<error>[wmpanel]</error> migration config not found. Checked: ' . $rootConfigFile . ' and ' . $pluginConfigFile);
-            return false;
-        }
 
         $migrationFiles = glob($migrationDir . '/*_install_plugin.php') ?: [];
         if (!$migrationFiles) {
@@ -60,24 +55,10 @@ class Install extends Command
             return false;
         }
 
-        $baseConfig = include $configFile;
-        if (!is_array($baseConfig)) {
-            $output->writeln('<error>[wmpanel]</error> Invalid migration config format.');
+        $tempConfigFile = $this->buildTempPhinxConfig($output, $migrationDir, null);
+        if ($tempConfigFile === null) {
             return false;
         }
-
-        if (!isset($baseConfig['paths']) || !is_array($baseConfig['paths'])) {
-            $baseConfig['paths'] = [];
-        }
-        $baseConfig['paths']['migrations'] = $migrationDir;
-
-        $tempConfigFile = tempnam(sys_get_temp_dir(), 'wmpanel_migration_');
-        if ($tempConfigFile === false) {
-            $output->writeln('<error>[wmpanel]</error> Unable to create temporary migration config.');
-            return false;
-        }
-
-        file_put_contents($tempConfigFile, "<?php\nreturn " . var_export($baseConfig, true) . ";\n");
 
         $command = sprintf(
             './vendor/bin/phinx migrate --configuration=%s --target=%s',
@@ -85,20 +66,99 @@ class Install extends Command
             escapeshellarg($targetVersion)
         );
 
-        exec($command, $outputLines, $returnVar);
+        $success = $this->runCommandAndWriteOutput($command, $output);
         @unlink($tempConfigFile);
 
-        foreach ($outputLines as $line) {
-            $output->writeln($line);
-        }
-
-        if ($returnVar !== 0) {
+        if (!$success) {
             $output->writeln('<error>[wmpanel]</error> Failed running install_plugin migration.');
             return false;
         }
 
         $output->writeln('<info>[wmpanel]</info> install_plugin migration executed.');
         return true;
+    }
+
+    protected function runInstallSeeder(OutputInterface $output): bool
+    {
+        $projectRoot = base_path();
+        $migrationDir = $projectRoot . '/vendor/yllumi/wmpanel/src/database/migrations';
+        $seedDir = $projectRoot . '/vendor/yllumi/wmpanel/src/database/seeds';
+        $seedClass = 'WmpanelInitSeeder';
+
+        if (!is_file($seedDir . '/' . $seedClass . '.php')) {
+            $output->writeln('<comment>[wmpanel]</comment> Seeder not found, skipping.');
+            return true;
+        }
+
+        $tempConfigFile = $this->buildTempPhinxConfig($output, $migrationDir, $seedDir);
+        if ($tempConfigFile === null) {
+            return false;
+        }
+
+        $command = sprintf(
+            './vendor/bin/phinx seed:run --configuration=%s --seed=%s',
+            escapeshellarg($tempConfigFile),
+            escapeshellarg($seedClass)
+        );
+
+        $success = $this->runCommandAndWriteOutput($command, $output);
+        @unlink($tempConfigFile);
+
+        if (!$success) {
+            $output->writeln('<error>[wmpanel]</error> Failed running install seeder.');
+            return false;
+        }
+
+        $output->writeln('<info>[wmpanel]</info> install seeder executed.');
+        return true;
+    }
+
+    protected function buildTempPhinxConfig(OutputInterface $output, string $migrationDir, ?string $seedDir): ?string
+    {
+        $projectRoot = base_path();
+        $rootConfigFile = $projectRoot . '/config/migration.php';
+        $pluginConfigDir = $projectRoot . '/config/plugin/yllumi/wmpanel';
+        $pluginConfigFile = $pluginConfigDir . '/migration.php';
+        $configFile = is_file($rootConfigFile) ? $rootConfigFile : $pluginConfigFile;
+
+        if (!is_file($configFile)) {
+            $output->writeln('<error>[wmpanel]</error> migration config not found. Checked: ' . $rootConfigFile . ' and ' . $pluginConfigFile);
+            return null;
+        }
+
+        $baseConfig = include $configFile;
+        if (!is_array($baseConfig)) {
+            $output->writeln('<error>[wmpanel]</error> Invalid migration config format.');
+            return null;
+        }
+
+        if (!isset($baseConfig['paths']) || !is_array($baseConfig['paths'])) {
+            $baseConfig['paths'] = [];
+        }
+        $baseConfig['paths']['migrations'] = $migrationDir;
+        if ($seedDir !== null) {
+            $baseConfig['paths']['seeds'] = $seedDir;
+        }
+
+        $tempConfigFile = tempnam(sys_get_temp_dir(), 'wmpanel_migration_');
+        if ($tempConfigFile === false) {
+            $output->writeln('<error>[wmpanel]</error> Unable to create temporary migration config.');
+            return null;
+        }
+
+        file_put_contents($tempConfigFile, "<?php\nreturn " . var_export($baseConfig, true) . ";\n");
+
+        return $tempConfigFile;
+    }
+
+    protected function runCommandAndWriteOutput(string $command, OutputInterface $output): bool
+    {
+        exec($command, $outputLines, $returnVar);
+        foreach ($outputLines as $line) {
+            $output->writeln($line);
+        }
+
+        return $returnVar === 0;
     }
 
     protected function publishFiles(OutputInterface $output): void

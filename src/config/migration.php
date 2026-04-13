@@ -2,7 +2,7 @@
 
 // Load environment variables from .env file manually 
 // since this file is used by Phinx which does not load the full application bootstrap
-$dotenvfile = __DIR__ . '/../.env';
+$dotenvfile = __DIR__ . '/../../../../.env';
 $dotenvContent = file_exists($dotenvfile) ? file_get_contents($dotenvfile) : '';
 $dotenvArray = [];
 if ($dotenvContent) {
