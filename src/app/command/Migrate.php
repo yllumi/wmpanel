@@ -28,7 +28,7 @@ class Migrate extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // run ./vendor/bin/phinx migrate
-        $command = './vendor/bin/phinx migrate --configuration=config/migration.php';
+        $command = './vendor/bin/phinx migrate --configuration=config/plugin/yllumi/wmpanel/migration.php';
         exec($command, $outputLines, $returnVar);
         foreach ($outputLines as $line) {
             $output->writeln($line);

@@ -28,7 +28,7 @@ class MigrateRollback extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // run ./vendor/bin/phinx rollback
-        $command = './vendor/bin/phinx rollback --configuration=config/migration.php';
+        $command = './vendor/bin/phinx rollback --configuration=config/plugin/yllumi/wmpanel/migration.php';
         exec($command, $outputLines, $returnVar);
         foreach ($outputLines as $line) {
             $output->writeln($line);

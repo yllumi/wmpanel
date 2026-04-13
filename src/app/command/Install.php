@@ -6,10 +6,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use support\Db;
-use Throwable;
 
-#[AsCommand('wmpanel:install', 'Install yllumi/wmpanel: run SQL migrations and publish config files.')]
+#[AsCommand('wmpanel:install', 'Install yllumi/wmpanel: run plugin migration and publish config files.')]
 class Install extends Command
 {
     protected function configure(): void {}
@@ -18,37 +16,89 @@ class Install extends Command
     {
         $output->writeln('<info>[wmpanel]</info> Starting installation...');
 
-        $this->installSql($output);
+        if (!$this->runInstallMigration($output)) {
+            return Command::FAILURE;
+        }
+
         $this->publishFiles($output);
 
         $output->writeln('<info>[wmpanel]</info> Installation complete.');
         return Command::SUCCESS;
     }
 
-    protected function installSql(OutputInterface $output): void
+    protected function runInstallMigration(OutputInterface $output): bool
     {
-        $sqlFile = dirname(__DIR__, 2) . '/install.sql';
+        $projectRoot = base_path();
+        $rootConfigFile = $projectRoot . '/config/migration.php';
+        $pluginConfigDir = $projectRoot . '/config/plugin/yllumi/wmpanel';
+        $migrationDir = $projectRoot . '/vendor/yllumi/wmpanel/src/database/migrations';
+        $pluginConfigFile = $pluginConfigDir . '/migration.php';
+        $configFile = is_file($rootConfigFile) ? $rootConfigFile : $pluginConfigFile;
 
-        if (!is_file($sqlFile)) {
-            $output->writeln('<comment>[wmpanel]</comment> install.sql not found, skipping.');
-            return;
+        if (!is_file($configFile)) {
+            $output->writeln('<error>[wmpanel]</error> migration config not found. Checked: ' . $rootConfigFile . ' and ' . $pluginConfigFile);
+            return false;
         }
 
-        $sql = file_get_contents($sqlFile);
-        // Tambahkan IF NOT EXISTS agar aman dijalankan ulang
-        $sql = preg_replace('/CREATE TABLE\s+`/i', 'CREATE TABLE IF NOT EXISTS `', $sql);
-
-        $statements = array_filter(array_map('trim', explode(';', $sql)));
-
-        foreach ($statements as $statement) {
-            try {
-                Db::connection('default')->statement($statement);
-            } catch (Throwable $e) {
-                $output->writeln('<error>[wmpanel]</error> SQL Error: ' . $e->getMessage());
-            }
+        $migrationFiles = glob($migrationDir . '/*_install_plugin.php') ?: [];
+        if (!$migrationFiles) {
+            $output->writeln('<error>[wmpanel]</error> install_plugin migration file not found.');
+            return false;
         }
 
-        $output->writeln('<info>[wmpanel]</info> Database tables installed.');
+        usort($migrationFiles, static function (string $left, string $right): int {
+            return strcmp($left, $right);
+        });
+
+        $migrationFile = end($migrationFiles);
+        $migrationBaseName = basename($migrationFile ?: '');
+        preg_match('/^(\d+)_install_plugin\.php$/', $migrationBaseName, $matches);
+        $targetVersion = $matches[1] ?? null;
+
+        if (!$targetVersion) {
+            $output->writeln('<error>[wmpanel]</error> Unable to resolve install_plugin migration version.');
+            return false;
+        }
+
+        $baseConfig = include $configFile;
+        if (!is_array($baseConfig)) {
+            $output->writeln('<error>[wmpanel]</error> Invalid migration config format.');
+            return false;
+        }
+
+        if (!isset($baseConfig['paths']) || !is_array($baseConfig['paths'])) {
+            $baseConfig['paths'] = [];
+        }
+        $baseConfig['paths']['migrations'] = $migrationDir;
+
+        $tempConfigFile = tempnam(sys_get_temp_dir(), 'wmpanel_migration_');
+        if ($tempConfigFile === false) {
+            $output->writeln('<error>[wmpanel]</error> Unable to create temporary migration config.');
+            return false;
+        }
+
+        file_put_contents($tempConfigFile, "<?php\nreturn " . var_export($baseConfig, true) . ";\n");
+
+        $command = sprintf(
+            './vendor/bin/phinx migrate --configuration=%s --target=%s',
+            escapeshellarg($tempConfigFile),
+            escapeshellarg($targetVersion)
+        );
+
+        exec($command, $outputLines, $returnVar);
+        @unlink($tempConfigFile);
+
+        foreach ($outputLines as $line) {
+            $output->writeln($line);
+        }
+
+        if ($returnVar !== 0) {
+            $output->writeln('<error>[wmpanel]</error> Failed running install_plugin migration.');
+            return false;
+        }
+
+        $output->writeln('<info>[wmpanel]</info> install_plugin migration executed.');
+        return true;
     }
 
     protected function publishFiles(OutputInterface $output): void
