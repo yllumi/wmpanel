@@ -166,6 +166,8 @@ class Install extends Command
         $projectRoot = base_path();
         $targetDir   = $projectRoot . '/config/plugin/panel';
         $packageSrc  = dirname(__DIR__, 2);
+        $themeSrcDir = dirname($packageSrc) . '/theme';
+        $publicThemeDir = $projectRoot . '/public/theme';
 
         if (!is_dir($targetDir)) {
             mkdir($targetDir, 0755, true);
@@ -175,6 +177,8 @@ class Install extends Command
         $this->copyFile($packageSrc . '/menu.yml', $targetDir . '/menu.yml', $output);
         $this->copyFile($packageSrc . '/privileges.yml', $targetDir . '/privileges.yml', $output);
         $this->copyDirectory($packageSrc . '/settings', $targetDir . '/settings', $output);
+
+        $this->copyDirectory($themeSrcDir, $publicThemeDir, $output);
 
         // Copy all config files to config/plugin/yllumi/wmpanel/
         $pluginConfigDir = $projectRoot . '/config/plugin/yllumi/wmpanel';
