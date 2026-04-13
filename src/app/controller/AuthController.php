@@ -40,7 +40,7 @@ class AuthController extends AdminController
             return json(['success' => 0, 'message' => 'Akun tidak ditemukan atau belum aktif.']);
         }
 
-        $Phpass = new \app\libraries\Phpass();
+        $Phpass = new \Yllumi\Wmpanel\libraries\Phpass();
         if (!$Phpass->CheckPassword($password, $user->password)) {
             return json(['success' => 0, 'message' => 'Username atau password salah.']);
         }
@@ -110,7 +110,7 @@ class AuthController extends AdminController
             return json(['success' => 0, 'message' => 'Username sudah digunakan.']);
         }
 
-        $Phpass = new \app\libraries\Phpass();
+        $Phpass = new \Yllumi\Wmpanel\libraries\Phpass();
         $hashed = $Phpass->HashPassword($password);
 
         Db::table('mein_users')->insert([
@@ -231,7 +231,7 @@ class AuthController extends AdminController
             return json(['success' => 0, 'message' => 'Kode OTP tidak valid atau sudah kedaluwarsa.']);
         }
 
-        $Phpass = new \app\libraries\Phpass();
+        $Phpass = new \Yllumi\Wmpanel\libraries\Phpass();
         Db::table('mein_users')
             ->where('id', $user->id)
             ->update([

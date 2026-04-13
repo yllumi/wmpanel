@@ -115,7 +115,7 @@ class UserController extends AdminController
             return json(['success' => 0, 'message' => 'Username sudah digunakan.']);
         }
 
-        $Phpass = new \app\libraries\Phpass();
+        $Phpass = new \Yllumi\Wmpanel\libraries\Phpass();
 
         $userData = [
             'name'       => $name,
@@ -193,7 +193,7 @@ class UserController extends AdminController
             if (strlen($password) < 8) {
                 return json(['success' => 0, 'message' => 'Password minimal 8 karakter.']);
             }
-            $Phpass = new \app\libraries\Phpass();
+            $Phpass = new \Yllumi\Wmpanel\libraries\Phpass();
             $payload['password'] = $Phpass->HashPassword($password);
         }
 
