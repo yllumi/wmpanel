@@ -104,7 +104,7 @@ class CreateUser extends Command
             return Command::FAILURE;
         }
 
-        $phpass = new \app\libraries\Phpass();
+        $phpass = new \Yllumi\Wmpanel\libraries\Phpass();
         $now = date('Y-m-d H:i:s');
 
         $payload = [
