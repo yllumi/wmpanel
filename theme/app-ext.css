@@ -111,7 +111,7 @@ a {
 
 .sidebar-wrapper .menu,
 html[data-bs-theme="dark"] .sidebar-wrapper .menu {
-  padding: 0 1rem 0 2rem;
+  padding: 0 1rem;
 }
 .sidebar-wrapper .menu .submenu {
   margin-top: 5px;
