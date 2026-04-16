@@ -14,3 +14,11 @@ function sidebarMenus()
 
     return \Symfony\Component\Yaml\Yaml::parseFile($path) ?? [];
 }
+
+if (!function_exists('base_url')) {
+    function base_url(string $path = ''): string
+    {
+        $prefix = env('APP_BASE_PATH', ''); // isi '/p' di .env
+        return $prefix . '/' . ltrim($path, '/');
+    }
+}

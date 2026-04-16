@@ -29,7 +29,7 @@
       "Yllumi\\Wmpanel\\": "src"
     },
     "files": [
-      "src/app/helper/sidebar.php"
+      "src/app/helper/common.php"
     ]
   }
 }
