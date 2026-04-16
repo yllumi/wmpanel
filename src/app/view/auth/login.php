@@ -10,7 +10,7 @@ function loginForm() {
             this.alertShow = false;
             this.loading  = true;
             try {
-                const res  = await fetch('/panel/auth/login', {
+                const res  = await fetch('<?= base_url('/panel/auth/login') ?>', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams(new FormData(event.target)),
@@ -93,7 +93,7 @@ function loginForm() {
                 <input type="checkbox" name="remember" value="1">
                 <span class="form-check-label">Ingat saya</span>
             </label>
-            <a href="/panel/auth/forgot" class="forgot-link">Lupa password?</a>
+            <a href="<?= base_url('/panel/auth/forgot') ?>" class="forgot-link">Lupa password?</a>
         </div>
 
         <button type="submit" class="btn-login" :disabled="loading">
@@ -107,7 +107,7 @@ function loginForm() {
     <?php if (getenv('app.enable_registration') === 'true'): ?>
         <div class="auth-divider">atau</div>
         <div class="auth-footer">
-            Belum punya akun? <a href="/panel/auth/register">Daftar di sini</a>
+            Belum punya akun? <a href="<?= base_url('/panel/auth/register') ?>">Daftar di sini</a>
         </div>
     <?php endif; ?>
 
