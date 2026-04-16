@@ -3,7 +3,7 @@
     <div class="page-heading">
         <div class="d-flex justify-content-between align-items-center">
             <h3><?= $page_title ?></h3>
-            <a href="/panel/privilege/create" class="btn btn-primary">
+            <a href="<?= site_url('panel/privilege/create') ?>" class="btn btn-primary">
                 <i class="bi bi-plus-lg"></i> Tambah Privilege
             </a>
         </div>
@@ -89,7 +89,7 @@
                                     <td class="text-muted " x-text="row.description || '-'"></td>
                                     <td class="text-end" x-show="privileges.privilege_write || privileges.privilege_delete">
                                         <template x-if="privileges.privilege_write">
-                                            <a :href="'/panel/privilege/edit?key=' + row.key" class="btn btn-sm btn-warning">
+                                            <a :href="'<?= site_url('panel/privilege/edit') ?>?key=' + row.key" class="btn btn-sm btn-warning">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
                                         </template>

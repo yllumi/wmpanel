@@ -143,7 +143,7 @@ class RoleController extends AdminController
 
         $this->syncPrivileges($id, (array) $privs);
 
-        return json(['success' => 1, 'message' => 'Role berhasil ditambahkan.', 'redirect' => '/panel/role/index']);
+        return json(['success' => 1, 'message' => 'Role berhasil ditambahkan.', 'redirect' => site_url('/panel/role/index')]);
     }
 
     // ── GET /panel/role/edit?id=X ─────────────────────────
@@ -153,7 +153,7 @@ class RoleController extends AdminController
         $role = $this->db()->where('id', $id)->first();
 
         if (!$role) {
-            return redirect('/panel/role/index');
+            return redirect(site_url('/panel/role/index'));
         }
 
         // Build composite "feature.privilege" keys so Alpine can uniquely match them
@@ -202,7 +202,7 @@ class RoleController extends AdminController
         // Delete cache
         \support\Cache::delete('role_privileges:' . $id);
 
-        return json(['success' => 1, 'message' => 'Role berhasil diperbarui.', 'redirect' => '/panel/role/index']);
+        return json(['success' => 1, 'message' => 'Role berhasil diperbarui.', 'redirect' => site_url('/panel/role/index')]);
     }
 
     // ── POST /panel/role/delete ────────────────────────────
@@ -228,7 +228,7 @@ class RoleController extends AdminController
 
         \support\Cache::delete('role_privileges:' . $id);
 
-        return json(['success' => 1, 'message' => 'Role berhasil dihapus.']);
+        return json(['success' => 1, 'message' => 'Role berhasil dihapus.', 'redirect' => site_url('/panel/role/index')]);
     }
 
     // ── Helper: sync privileges ────────────────────────────────

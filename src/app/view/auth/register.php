@@ -148,7 +148,7 @@ function registerForm() {
     <div class="auth-divider">atau</div>
 
     <div class="auth-footer">
-        Sudah punya akun? <a href="/panel/auth/login">Masuk di sini</a>
+        Sudah punya akun? <a href="<?= site_url('panel/auth/login') ?>">Masuk di sini</a>
         <br><br>Powered by WebmanPanel
     </div>
 

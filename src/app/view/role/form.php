@@ -11,7 +11,7 @@ $rolePrivsJson = json_encode($role_privs ?? []);
     <div class="page-heading">
         <div class="d-flex justify-content-between align-items-center">
             <h3><?= $page_title ?></h3>
-            <a href="/panel/role/index" class="btn btn-light">
+            <a href="<?= site_url('panel/role') ?>" class="btn btn-light">
                 <i class="bi bi-arrow-left"></i> Kembali
             </a>
         </div>

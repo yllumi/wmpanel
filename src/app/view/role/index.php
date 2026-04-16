@@ -3,7 +3,7 @@
     <div class="page-heading">
         <div class="d-flex justify-content-between align-items-center">
             <h3><?= $page_title ?></h3>
-            <a href="/panel/role/create" class="btn btn-primary">
+            <a href="<?= site_url('panel/role/create') ?>" class="btn btn-primary">
                 <i class="bi bi-plus-lg"></i> Tambah Role
             </a>
         </div>
@@ -86,7 +86,7 @@
                                     </td>
                                     <td class="text-muted " x-text="row.created_at"></td>
                                     <td>
-                                        <a :href="'/panel/role/edit?id=' + row.id" class="btn btn-sm btn-warning">
+                                        <a :href="'<?= site_url('panel/role/edit') ?>?id=' + row.id" class="btn btn-sm btn-warning">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                         <button

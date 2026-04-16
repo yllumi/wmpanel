@@ -125,9 +125,9 @@ function resetForm() {
     <div class="auth-divider">atau</div>
 
     <div class="auth-footer">
-        <a href="/panel/auth/forgot"><i class="bi bi-arrow-left" style="font-size:.8rem"></i> Minta kode baru</a>
+        <a href="<?= site_url('panel/auth/forgot') ?>"><i class="bi bi-arrow-left" style="font-size:.8rem"></i> Minta kode baru</a>
         <span style="margin:0 .5rem;opacity:.4">|</span>
-        <a href="/panel/auth/login">Kembali ke login</a>
+        <a href="<?= site_url('panel/auth/login') ?>">Kembali ke login</a>
         <br><br>Powered by WebmanPanel
     </div>
 

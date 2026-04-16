@@ -185,7 +185,7 @@
         <p>Halaman yang Anda cari tidak ada, mungkin telah dipindahkan,<br>atau URL yang dimasukkan salah.</p>
 
         <div class="actions">
-            <a href="/panel/index/index" class="btn btn-primary">
+            <a href="<?= site_url('panel') ?>" class="btn btn-primary">
                 <i class="bi bi-house-door"></i> Kembali ke Dashboard
             </a>
             <a href="javascript:history.back()" class="btn btn-secondary">

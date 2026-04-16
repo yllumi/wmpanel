@@ -70,7 +70,7 @@
                             <hr class="dropdown-divider mb-1">
                         </li>
                         <li>
-                            <a class="dropdown-item text-danger" href="<?= admin_url('auth/logout') ?>">
+                            <a class="dropdown-item text-danger" href="<?= site_url('panel/auth/logout') ?>">
                                 <i class="icon-mid bi bi-box-arrow-left me-2"></i> Logout
                             </a>
                         </li>

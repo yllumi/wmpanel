@@ -18,11 +18,11 @@ class EntryController extends AdminController
     // ── Schema loader ────────────────────────────────────────────
     /**
      * Find and parse the YAML schema for a given slug.
-     * Searches across all plugins: plugin/{*}/app/entry/{slug}.yml
+     * Searches across all plugins: plugin/{*}/panel/entry/{slug}.yml
      */
     private function loadSchema(string $slug): array
     {
-        $files = glob(base_path("plugin/*/app/entry/{$slug}.yml"));
+        $files = glob(base_path("plugin/*/panel/entry/{$slug}.yml"));
 
         if (empty($files)) {
             throw new \RuntimeException("Schema '{$slug}.yml' tidak ditemukan.");
@@ -36,7 +36,7 @@ class EntryController extends AdminController
         return Db::table($table)->whereNull('deleted_at');
     }
 
-    // ── GET /app/entry/{slug} ────────────────────────────────────
+    // ── GET /panel/entry/{slug} ────────────────────────────────────
     public function index(Request $request, string $slug)
     {
         $schema = $this->loadSchema($slug);
@@ -48,7 +48,7 @@ class EntryController extends AdminController
         return render('entry/index', $this->data, 'admin', 'panel');
     }
 
-    // ── GET /app/entry/{slug}/data ───────────────────────────────
+    // ── GET /panel/entry/{slug}/data ───────────────────────────────
     public function data(Request $request, string $slug)
     {
         $schema  = $this->loadSchema($slug);
@@ -103,7 +103,7 @@ class EntryController extends AdminController
         ]);
     }
 
-    // ── GET /app/entry/{slug}/create ─────────────────────────────
+    // ── GET /panel/entry/{slug}/create ─────────────────────────────
     public function create(Request $request, string $slug)
     {
         $schema = $this->loadSchema($slug);
@@ -114,7 +114,7 @@ class EntryController extends AdminController
         return render('entry/form', $this->data, 'admin', 'panel');
     }
 
-    // ── GET /app/entry/{slug}/edit?id=X ──────────────────────────
+    // ── GET /panel/entry/{slug}/edit?id=X ──────────────────────────
     public function edit(Request $request, string $slug)
     {
         $schema = $this->loadSchema($slug);
@@ -123,7 +123,7 @@ class EntryController extends AdminController
         $row    = $this->db($table)->where('id', $id)->first();
 
         if (!$row) {
-            return redirect("/app/entry/{$slug}");
+            return redirect(site_url("/panel/entry/{$slug}"));
         }
 
         $this->data['page_title'] = 'Edit ' . ($schema['name'] ?? ucfirst($slug));
@@ -132,7 +132,7 @@ class EntryController extends AdminController
         return render('entry/form', $this->data, 'admin', 'panel');
     }
 
-    // ── POST /app/entry/{slug}/store ─────────────────────────────
+    // ── POST /panel/entry/{slug}/store ─────────────────────────────
     public function store(Request $request, string $slug)
     {
         $schema = $this->loadSchema($slug);
@@ -149,7 +149,7 @@ class EntryController extends AdminController
         return json(['success' => 1, 'message' => ($schema['name'] ?? 'Data') . ' berhasil ditambahkan.']);
     }
 
-    // ── POST /app/entry/{slug}/update ────────────────────────────
+    // ── POST /panel/entry/{slug}/update ────────────────────────────
     public function update(Request $request, string $slug)
     {
         $schema = $this->loadSchema($slug);
@@ -177,7 +177,7 @@ class EntryController extends AdminController
         return json(['success' => 1, 'message' => ($schema['name'] ?? 'Data') . ' berhasil diperbarui.']);
     }
 
-    // ── POST /app/entry/{slug}/delete ────────────────────────────
+    // ── POST /panel/entry/{slug}/delete ────────────────────────────
     public function delete(Request $request, string $slug)
     {
         $schema = $this->loadSchema($slug);
@@ -210,8 +210,8 @@ class EntryController extends AdminController
         return [
             'fieldsHtml' => $fb->render($values),
             'alpineJson' => $fb->toAlpineJson(),
-            'submitUrl'  => $isEdit ? "/app/entry/{$slug}/update" : "/app/entry/{$slug}/store",
-            'backUrl'    => "/app/entry/{$slug}",
+            'submitUrl'  => $isEdit ? "/panel/entry/{$slug}/update" : "/panel/entry/{$slug}/store",
+            'backUrl'    => "/panel/entry/{$slug}",
             'rowId'      => $isEdit ? (int) $row->id : 0,
             'schema'     => $schema,
         ];

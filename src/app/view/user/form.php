@@ -131,7 +131,7 @@ $btnText = $isEdit ? 'Simpan Perubahan' : 'Tambah User';
                                     <i class="bi bi-check-lg" x-show="!loading"></i>
                                     <span x-text="loading ? 'Menyimpan...' : '<?= $btnText ?>'"></span>
                                 </button>
-                                <a href="/panel/user/index" class="btn btn-light">Batal</a>
+                                <a href="<?= site_url('panel/user') ?>" class="btn btn-light">Batal</a>
                             </div>
 
                         </form>

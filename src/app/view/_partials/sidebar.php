@@ -3,7 +3,7 @@
         <div class="sidebar-header position-relative">
             <div class="d-flex justify-content-center align-items-center">
                 <div class="logo">
-                    <a href="<?= admin_url() ?>"><?= config('plugin.yllumi.wmpanel.app.site_title') ?></a>
+                    <a href="<?= site_url('panel') ?>"><?= config('plugin.yllumi.wmpanel.app.site_title') ?></a>
                 </div>
 
                 <div class="sidebar-toggler x">
@@ -16,7 +16,7 @@
             <ul class="menu">
                 <?php foreach (sidebarMenus() as $menu) : ?>
                     <li class="sidebar-item <?= $menu['module'] == $module ? 'active submenu-open' : '' ?> <?= isset($menu['children']) && count($menu['children']) > 0 ? 'has-sub' : '' ?>">
-                        <a href="<?= $menu['url'] ? $menu['url'] : '#' ?>" target="<?= $menu['target'] ?? '_self' ?>" class='sidebar-link'>
+                        <a href="<?= $menu['url'] ? site_url($menu['url']) : '#' ?>" target="<?= $menu['target'] ?? '_self' ?>" class='sidebar-link'>
                             <i class="<?= $menu['icon'] ?>"></i>
                             <span><?= $menu['label'] ?></span>
                         </a>
@@ -24,7 +24,7 @@
                             <ul class="submenu">
                                 <?php foreach ($menu['children'] as $child) : ?>
                                     <li class="submenu-item <?= $child['submodule'] == $submodule ? 'active' : '' ?>">
-                                        <a href="<?= $child['url'] ? $child['url'] : '#' ?>" target="<?= $child['target'] ?? '_self' ?>">
+                                        <a href="<?= $child['url'] ? site_url($child['url']) : '#' ?>" target="<?= $child['target'] ?? '_self' ?>">
                                             <i class="<?= $child['icon'] ?>"></i>
                                             <span><?= $child['label'] ?></span>
                                         </a>

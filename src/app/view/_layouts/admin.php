@@ -10,8 +10,8 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" crossorigin href="/theme/app.css">
-    <link rel="stylesheet" crossorigin href="/theme/app-ext.css">
+    <link rel="stylesheet" crossorigin href="<?= site_url('/theme/app.css') ?>">
+    <link rel="stylesheet" crossorigin href="<?= site_url('/theme/app-ext.css') ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.9/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css">
@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
     <style>[x-cloak]{display:none!important}</style>
-    <script src="/theme/static/js/initTheme.js"></script>
+    <script src="<?= site_url('/theme/static/js/initTheme.js') ?>"></script>
 </head>
 
 <body>
@@ -45,7 +45,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    <script src="/theme/tinymce/js/tinymce/tinymce.min.js"></script>
+    <script src="<?= site_url('/theme/tinymce/js/tinymce/tinymce.min.js') ?>"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.9/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>
 
@@ -53,7 +53,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     
-    <script src="/theme/app.js"></script>
+    <script src="<?= site_url('/theme/app.js') ?>"></script>
     
     <!-- https://fengyuanchen.github.io/datepicker -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.10/datepicker.min.js" type="text/javascript"></script>

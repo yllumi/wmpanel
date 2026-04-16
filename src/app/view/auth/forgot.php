@@ -104,7 +104,7 @@ function forgotForm() {
     <div class="auth-divider">atau</div>
 
     <div class="auth-footer">
-        Ingat password? <a href="/panel/auth/login">Masuk di sini</a>
+        Ingat password? <a href="<?= site_url('panel/auth/login') ?>">Masuk di sini</a>
         <br><br>Powered by WebmanPanel
     </div>
 

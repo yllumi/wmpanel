@@ -132,7 +132,7 @@ class UserController extends AdminController
         }
         Db::table('mein_users')->insert($userData);
 
-        return json(['success' => 1, 'message' => 'User berhasil ditambahkan.', 'redirect' => '/panel/user']);
+        return json(['success' => 1, 'message' => 'User berhasil ditambahkan.', 'redirect' => site_url('/panel/user')]);
     }
 
     #[RequirePrivilege('user.write')]
@@ -142,7 +142,7 @@ class UserController extends AdminController
         $user = Db::table('mein_users')->where('id', $id)->first();
 
         if (!$user) {
-            return redirect('/panel/user');
+            return redirect(site_url('/panel/user'));
         }
 
         $this->data['page_title'] = 'Edit User';
@@ -199,7 +199,7 @@ class UserController extends AdminController
 
         Db::table('mein_users')->where('id', $id)->update($payload);
 
-        return json(['success' => 1, 'message' => 'User berhasil diperbarui.', 'redirect' => '/panel/user/index']);
+        return json(['success' => 1, 'message' => 'User berhasil diperbarui.', 'redirect' => site_url('/panel/user/index')]);
     }
 
     #[RequirePrivilege('user.delete')]
@@ -215,6 +215,6 @@ class UserController extends AdminController
             return json(['success' => 0, 'message' => 'User tidak ditemukan.']);
         }
 
-        return json(['success' => 1, 'message' => 'User berhasil dihapus.']);
+        return json(['success' => 1, 'message' => 'User berhasil dihapus.', 'redirect' => site_url('/panel/user/index')]);
     }
 }

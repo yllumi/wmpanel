@@ -13,7 +13,7 @@ class AuthController extends AdminController
     public function login(Request $request)
     {
         if (session('user')) {
-            return redirect('/panel');
+            return redirect(site_url('panel'));
         }
         $data['page_title'] = 'Login';
         return render('auth/login', $data, null, 'auth');
@@ -61,7 +61,7 @@ class AuthController extends AdminController
     public function logout(Request $request)
     {
         $request->session()->delete('user');
-        return redirect('/panel/auth/login');
+        return redirect(site_url('panel/auth/login'));
     }
 
     // ── GET /panel/auth/register ──────────────────────────
@@ -73,7 +73,7 @@ class AuthController extends AdminController
         }
 
         if (session('user')) {
-            return redirect('/panel');
+            return redirect(site_url('panel'));
         }
         $data['page_title'] = 'Daftar Akun';
         return render('auth/register', $data, 'auth');
@@ -129,7 +129,7 @@ class AuthController extends AdminController
     // ── GET /panel/auth/forgot ─────────────────────────────
     public function forgot(Request $request)
     {
-        if (session('user')) return redirect('/panel');
+        if (session('user')) return redirect(site_url('panel'));
         $data['page_title']       = 'Lupa Password';
         $data['recaptcha_site_key'] = getenv('recaptcha.site_key') ?: '';
         return render('auth/forgot', $data, 'auth');
@@ -195,9 +195,9 @@ class AuthController extends AdminController
     // ── GET /panel/auth/reset ──────────────────────────────
     public function reset(Request $request)
     {
-        if (session('user')) return redirect('/panel');
+        if (session('user')) return redirect(site_url('panel'));
         $token = $request->input('token', '');
-        if (!$token) return redirect('/panel/auth/forgot');
+        if (!$token) return redirect(site_url('panel/auth/forgot'));
 
         $data['page_title'] = 'Reset Password';
         $data['token']      = htmlspecialchars($token);
@@ -241,6 +241,6 @@ class AuthController extends AdminController
                 'updated_at' => date('Y-m-d H:i:s'),
             ]);
 
-        return json(['success' => 1, 'message' => 'Password berhasil direset. Silakan login.', 'redirect' => '/panel/auth/login']);
+        return json(['success' => 1, 'message' => 'Password berhasil direset. Silakan login.', 'redirect' => site_url('panel/auth/login')]);
     }
 }

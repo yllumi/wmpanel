@@ -9,7 +9,7 @@
     <div class="page-heading">
         <div class="d-flex justify-content-between align-items-center">
             <h3><?= $page_title ?></h3>
-            <a href="/panel/user/create" class="btn btn-primary">
+            <a href="<?= site_url('panel/user/create') ?>" class="btn btn-primary">
                 <i class="bi bi-plus-lg"></i> Tambah User
             </a>
         </div>
@@ -121,7 +121,7 @@
                                     <td class="text-muted " x-text="row.created_at"></td>
                                     <td class="text-end">
                                         <template x-if="privileges.user_write">
-                                            <a :href="'/panel/user/edit?id=' + row.id" class="btn btn-sm btn-warning">
+                                            <a :href="'<?= site_url('panel/user/edit') ?>?id=' + row.id" class="btn btn-sm btn-warning">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
                                         </template>
