@@ -12,9 +12,6 @@ class AuthMiddleware implements MiddlewareInterface
     public function process(Request $request, callable $handler) : Response
     {
         $path = $request->path();
-        if (!preg_match('#^/panel(?:/|$)#', $path)) {
-            return $handler($request);
-        }
 
         $controller = new ReflectionClass($request->controller);
         $noNeedLogin = $controller->getDefaultProperties()['noNeedLogin'] ?? [];

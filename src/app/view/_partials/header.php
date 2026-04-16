@@ -21,7 +21,7 @@
                             </div>
                             <div class="user-img d-flex align-items-center">
                                 <div class="avatar avatar-md">
-                                    <img src="https://ui-avatars.com/api/?name=<?= urlencode(session('user.name')) ?>&background=435ebe&color=fff" alt="User Avatar">
+                                    <img src="https://ui-avatars.com/api/?name=<?= urlencode(session('user.name') ?? '') ?>&background=435ebe&color=fff" alt="User Avatar">
                                 </div>
                             </div>
                         </div>
