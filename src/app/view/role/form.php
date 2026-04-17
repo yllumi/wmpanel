@@ -1,6 +1,6 @@
 <?php
 $isEdit  = !empty($role);
-$action  = $isEdit ? '/panel/role/update' : '/panel/role/store';
+$action  = $isEdit ? site_url('/panel/role/update') : site_url('/panel/role/store');
 $btnText = $isEdit ? 'Simpan Perubahan' : 'Tambah Role';
 // PHP array to JSON for Alpine bootstrap
 $rolePrivsJson = json_encode($role_privs ?? []);

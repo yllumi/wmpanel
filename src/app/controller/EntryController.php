@@ -210,8 +210,8 @@ class EntryController extends AdminController
         return [
             'fieldsHtml' => $fb->render($values),
             'alpineJson' => $fb->toAlpineJson(),
-            'submitUrl'  => $isEdit ? "/panel/entry/{$slug}/update" : "/panel/entry/{$slug}/store",
-            'backUrl'    => "/panel/entry/{$slug}",
+            'submitUrl'  => $isEdit ? site_url("/panel/entry/{$slug}/update") : site_url("/panel/entry/{$slug}/store"),
+            'backUrl'    => site_url("/panel/entry/{$slug}"),
             'rowId'      => $isEdit ? (int) $row->id : 0,
             'schema'     => $schema,
         ];

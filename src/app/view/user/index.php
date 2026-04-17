@@ -212,7 +212,7 @@ function userTable() {
                 status:   this.statusFilter,
             });
             try {
-                const res  = await fetch('/panel/user/data?' + params);
+                const res  = await fetch(`<?= site_url('/panel/user/data') ?>?` + params);
                 const data = await res.json();
                 this.rows     = data.rows;
                 this.total    = data.total;
@@ -236,7 +236,7 @@ function userTable() {
             const confirmed = await Prompts.confirm(`Yakin ingin menghapus user "${row.name}"? Tindakan ini tidak dapat dibatalkan.`);
             if (!confirmed) return;
             try {
-                const res  = await fetch('/panel/user/delete', {
+                const res  = await fetch(`<?= site_url('/panel/user/delete') ?>`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams({ id: row.id }),

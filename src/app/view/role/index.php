@@ -158,7 +158,7 @@ function roleTable() {
         async load() {
             this.loading = true;
             try {
-                const res  = await fetch('/panel/role/data?' + new URLSearchParams({
+                const res  = await fetch(`<?= site_url('/panel/role/data') ?>?` + new URLSearchParams({
                     page: this.page, per_page: this.perPage, search: this.search,
                 }));
                 const data = await res.json();
@@ -183,7 +183,7 @@ function roleTable() {
             const confirmed = await Prompts.confirm(`Yakin ingin menghapus role "${row.name}"?\n\nSemua privilege role ini akan ikut dihapus.`);
             if (!confirmed) return;
             try {
-                const res  = await fetch('/panel/role/delete', {
+                const res  = await fetch(`<?= site_url('/panel/role/delete') ?>`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams({ id: row.id }),

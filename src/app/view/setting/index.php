@@ -126,7 +126,7 @@ function panelForm(group) {
             };
 
             try {
-                const res = await axios.get('/panel/setting/data', { params: { group } });
+                const res = await axios.get(`<?= site_url('/panel/setting/data') ?>`, { params: { group } });
                 if (res.data && res.data.success) {
                     this.fields = res.data.fields ?? {};
                     // Re-sync Ace editors whose content was empty before the fetch
@@ -147,7 +147,7 @@ function panelForm(group) {
         async save() {
             this.saving = true;
             try {
-                const res = await axios.post('/panel/setting/save', { group, ...this.fields });
+                const res = await axios.post(`<?= site_url('/panel/setting/save') ?>`, { group, ...this.fields });
                 if (res.data && res.data.success) {
                     toastr.success(res.data.message || 'Pengaturan berhasil disimpan.', );
                 } else {

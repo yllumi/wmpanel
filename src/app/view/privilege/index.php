@@ -168,11 +168,11 @@ function privilegeTable() {
             this.loading = true;
             try {
                 const [dataRes, modRes] = await Promise.all([
-                    fetch('/panel/privilege/data?' + new URLSearchParams({
+                    fetch(`<?= site_url('/panel/privilege/data') ?>` + '?' + new URLSearchParams({
                         page: this.page, per_page: this.perPage,
                         search: this.search, feature: this.filterFeature,
                     })),
-                    this.features.length ? Promise.resolve(null) : fetch('/panel/privilege/features'),
+                    this.features.length ? Promise.resolve(null) : fetch(`<?= site_url('/panel/privilege/features') ?>`),
                 ]);
 
                 const data = await dataRes.json();
@@ -203,7 +203,7 @@ function privilegeTable() {
             const confirmed = await Prompts.confirm(`Yakin ingin menghapus privilege "${row.privilege}"?`);
             if (!confirmed) return;
             try {
-                const res  = await fetch('/panel/privilege/delete', {
+                const res  = await fetch(`<?= site_url('/panel/privilege/delete') ?>`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams({ key: row.key }),

@@ -11,7 +11,7 @@ function registerForm() {
             this.alertShow = false;
             this.loading  = true;
             try {
-                const res  = await fetch('/panel/auth/register', {
+                const res  = await fetch(`<?= site_url('/panel/auth/register') ?>`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams(new FormData(event.target)),

@@ -22,7 +22,7 @@ function forgotForm() {
             formData.set('recaptcha_token', recaptchaToken);
 
             try {
-                const res  = await fetch('/panel/auth/forgot', {
+                const res  = await fetch(`<?= site_url('/panel/auth/forgot') ?>`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams(formData),

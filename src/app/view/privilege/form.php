@@ -1,6 +1,6 @@
 <?php
 $isEdit  = !empty($privilege);
-$action  = $isEdit ? '/panel/privilege/update' : '/panel/privilege/store';
+$action  = $isEdit ? site_url('/panel/privilege/update') : site_url('/panel/privilege/store');
 $btnText = $isEdit ? 'Simpan Perubahan' : 'Tambah Privilege';
 ?>
 

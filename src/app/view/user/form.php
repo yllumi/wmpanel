@@ -1,6 +1,6 @@
 <?php
 $isEdit  = !empty($user);
-$action  = $isEdit ? '/panel/user/update' : '/panel/user/store';
+$action  = $isEdit ? site_url('/panel/user/update') : site_url('/panel/user/store');
 $btnText = $isEdit ? 'Simpan Perubahan' : 'Tambah User';
 ?>
 
