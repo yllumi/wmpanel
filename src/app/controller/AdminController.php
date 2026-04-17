@@ -2,6 +2,10 @@
 
 namespace Yllumi\Wmpanel\app\controller;
 
+use support\annotation\Middleware;
+use Yllumi\Wmpanel\app\middleware\PanelAuthMiddleware;
+
+#[Middleware(PanelAuthMiddleware::class)]
 class AdminController
 {
     /**

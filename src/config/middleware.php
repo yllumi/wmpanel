@@ -2,6 +2,6 @@
 
 return [
     '' => [
-        \Yllumi\Wmpanel\app\middleware\AuthMiddleware::class
+
     ]
 ];

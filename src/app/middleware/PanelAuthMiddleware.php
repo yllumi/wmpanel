@@ -7,7 +7,7 @@ use Webman\Http\Response;
 use Webman\Http\Request;
 use Yllumi\Wmpanel\attributes\RequirePrivilege;
 
-class AuthMiddleware implements MiddlewareInterface
+class PanelAuthMiddleware implements MiddlewareInterface
 {
     public function process(Request $request, callable $handler) : Response
     {
