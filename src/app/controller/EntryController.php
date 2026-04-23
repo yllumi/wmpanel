@@ -200,7 +200,7 @@ class EntryController extends AdminController
     }
 
     // ── Private: build FormBuilder data ─────────────────────────
-    private function buildForm(array $schema, string $slug, object $row = null): array
+    private function buildForm(array $schema, string $slug, $row = null): array
     {
         $isEdit      = $row !== null;
         $fieldSchema = $this->toFieldSchema($schema);
