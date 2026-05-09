@@ -63,7 +63,7 @@
       icon: 'bi bi-sliders'
       url: /panel/setting
       target: null
-      privilege: role.read
+      privilege: setting.update
 -
   id: menu_69d223a8a210e3
   label: Development
@@ -81,6 +81,7 @@
       icon: 'bi bi-list-nested'
       url: /panel/panelmenu
       target: null
+      privilege: panelmenu.modify
     -
       id: menu_69d223a8a21153
       label: Privilege
@@ -89,6 +90,7 @@
       icon: 'bi bi-shield-lock'
       url: /panel/privilege
       target: null
+      privilege: privilege.read
     -
       id: menu_69d223a8a211b7
       label: Redis
@@ -97,3 +99,4 @@
       icon: 'bi bi-memory'
       url: /panel/redis
       target: null
+      privilege: redis.manage
