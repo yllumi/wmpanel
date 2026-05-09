@@ -33,10 +33,7 @@ class SettingController extends AdminController
             return json(['success' => 0, 'message' => 'Group tidak boleh kosong.']);
         }
 
-        $rows = Db::table('mein_options')
-            ->where('option_group', $group)
-            ->pluck('option_value', 'option_name')
-            ->toArray();
+        $rows = self::getGroupFromCache($group);
 
         return json(['success' => 1, 'fields' => (object) $rows]);
     }
@@ -67,7 +64,34 @@ class SettingController extends AdminController
             );
         }
 
+        // Bust the cache for this group
+        \support\Cache::delete('panel_setting:' . $group);
+
         return json(['success' => 1, 'message' => 'Pengaturan berhasil disimpan.']);
+    }
+
+    // ── Static cache helper ──────────────────────────────────────
+
+    /**
+     * Return all option_name => option_value pairs for a group,
+     * reading from cache when available.
+     */
+    public static function getGroupFromCache(string $group): array
+    {
+        $cacheKey = 'panel_setting:' . $group;
+        $cached   = \support\Cache::get($cacheKey);
+        if ($cached !== null) {
+            return $cached;
+        }
+
+        $rows = Db::table('mein_options')
+            ->where('option_group', $group)
+            ->pluck('option_value', 'option_name')
+            ->toArray();
+
+        \support\Cache::set($cacheKey, $rows, 86400); // 24 jam
+
+        return $rows;
     }
 
     // ── Private helpers ───────────────────────────────────────────

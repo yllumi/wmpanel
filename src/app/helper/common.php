@@ -48,3 +48,22 @@ if (!function_exists('site_url')) {
         return $prefix . '/' . ltrim($path, '/');
     }
 }
+
+if (!function_exists('setting')) {
+    /**
+     * Retrieve a setting value from cache.
+     * Usage: setting('site.site_title')  →  returns the value or $default.
+     */
+    function setting(string $key, mixed $default = null): mixed
+    {
+        $dot = strpos($key, '.');
+        if ($dot === false) return $default;
+
+        $group  = substr($key, 0, $dot);
+        $name   = substr($key, $dot + 1);
+
+        $fields = \Yllumi\Wmpanel\app\controller\SettingController::getGroupFromCache($group);
+
+        return $fields[$name] ?? $default;
+    }
+}

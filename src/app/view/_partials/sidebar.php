@@ -3,7 +3,7 @@
         <div class="sidebar-header position-relative">
             <div class="d-flex justify-content-center align-items-center">
                 <div class="logo">
-                    <a href="<?= site_url('panel') ?>"><?= config('plugin.yllumi.wmpanel.app.site_title') ?></a>
+                    <a href="<?= site_url('panel') ?>"><?= setting('site.site_title') ?></a>
                 </div>
 
                 <div class="sidebar-toggler x">
