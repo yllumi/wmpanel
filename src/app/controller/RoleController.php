@@ -4,6 +4,7 @@ namespace Yllumi\Wmpanel\app\controller;
 
 use support\Request;
 use support\Db;
+use Symfony\Component\Yaml\Yaml;
 
 class RoleController extends AdminController
 {
@@ -13,21 +14,24 @@ class RoleController extends AdminController
         'submodule' => 'role',
     ];
 
-    // Load privileges from DB grouped by feature: [feature => [privilege => description]]
-    public static function loadPrivilegesFromDb(): array
+    // Load privileges from config/plugin/panel/privileges.yml grouped by feature: [feature => [privilege => description]]
+    public static function loadPrivilegesFromYml(): array
     {
-        $rows = Db::table('mein_privileges')
-            ->whereNull('deleted_at')
-            ->orderBy('feature')
-            ->orderBy('privilege')
-            ->get(['feature', 'privilege', 'description']);
+        $file = base_path('config/plugin/panel/privileges.yml');
+        if (!file_exists($file)) return [];
+
+        $yaml = Yaml::parseFile($file);
 
         // Use "feature.privilege" composite string as the checkbox key so each
         // privilege is globally unique even if action names repeat across features.
         $grouped = [];
-        foreach ($rows as $row) {
-            $key = $row->feature . '.' . $row->privilege;
-            $grouped[$row->feature][$key] = $row->description;
+        foreach ($yaml as $feature => $actions) {
+            foreach ($actions as $actionMap) {
+                foreach ($actionMap as $privilege => $description) {
+                    $key = $feature . '.' . $privilege;
+                    $grouped[$feature][$key] = $description;
+                }
+            }
         }
         return $grouped;
     }
@@ -111,7 +115,7 @@ class RoleController extends AdminController
         $this->data['page_title']     = 'Tambah Role';
         $this->data['role']           = null;
         $this->data['role_privs']     = [];
-        $this->data['all_privileges'] = self::loadPrivilegesFromDb();
+        $this->data['all_privileges'] = self::loadPrivilegesFromYml();
         return render('role/form', $this->data);
     }
 
@@ -168,7 +172,7 @@ class RoleController extends AdminController
         $this->data['page_title']     = 'Edit Role';
         $this->data['role']           = $role;
         $this->data['role_privs']     = $privs;
-        $this->data['all_privileges'] = self::loadPrivilegesFromDb();
+        $this->data['all_privileges'] = self::loadPrivilegesFromYml();
         return render('role/form', $this->data);
     }
 

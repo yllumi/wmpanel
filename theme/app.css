@@ -155,13 +155,16 @@ ul {
 }
 
 .sidebar-hide {
-    font-size: 1.4rem;
+    font-size: 2rem;
     color: var(--sidebar-text);
     display: flex;
     align-items: center;
     padding: 0.25rem;
     border-radius: var(--radius);
     transition: background var(--transition);
+    position: absolute;
+    top: 0;
+    right: 5px;
 }
 
 .sidebar-hide:hover {
@@ -413,7 +416,7 @@ header {
    ============================================= */
 #main-content {
     flex: 1;
-    padding: 2rem;
+    padding: 2rem 1rem;
     overflow-y: auto;
 }
 
@@ -527,13 +530,13 @@ footer .footer {
         height: calc(100vh - 2rem);
         z-index: 1041;
         min-width: var(--sidebar-width);
-        border-radius: var(--radius);
+        border-radius: 0 var(--radius) var(--radius) 0;
         margin: 0;
     }
 
     /* app.js adds .active to show, .inactive to hide */
     #sidebar.active {
-        transform: translateX(0);
+        transform: translateX(-20px);
     }
 
     #sidebar.inactive {
