@@ -54,7 +54,7 @@ class AuthController extends AdminController
             'role_id'  => $user->role_id,
         ]);
 
-        return json(['success' => 1, 'redirect' => '/panel']);
+        return json(['success' => 1, 'redirect' => site_url('panel')]);
     }
 
     // ── GET /panel/auth/logout ─────────────────────────────
@@ -123,7 +123,7 @@ class AuthController extends AdminController
             'updated_at' => date('Y-m-d H:i:s'),
         ]);
 
-        return json(['success' => 1, 'message' => 'Akun berhasil dibuat. Silakan login.', 'redirect' => '/panel/auth/login']);
+        return json(['success' => 1, 'message' => 'Akun berhasil dibuat. Silakan login.', 'redirect' => site_url('panel/auth/login')]);
     }
 
     // ── GET /panel/auth/forgot ─────────────────────────────
