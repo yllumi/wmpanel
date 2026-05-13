@@ -24,7 +24,9 @@ class RedisController extends AdminController
     public function keys(Request $request)
     {
         $pattern = trim($request->input('pattern', '*')) ?: '*';
+        $db      = (int) $request->input('db', 0);
         try {
+            $this->switchDb($db);
             $keys = Redis::keys($pattern);
             sort($keys);
             return json(['success' => 1, 'keys' => $keys, 'count' => count($keys)]);
@@ -37,9 +39,11 @@ class RedisController extends AdminController
     public function getKey(Request $request)
     {
         $key = trim($request->input('key', ''));
+        $db  = (int) $request->input('db', 0);
         if ($key === '') return json(['success' => 0, 'message' => 'Key tidak boleh kosong.']);
 
         try {
+            $this->switchDb($db);
             if (!Redis::exists($key)) {
                 return json(['success' => 0, 'message' => 'Key tidak ditemukan.']);
             }
@@ -60,10 +64,12 @@ class RedisController extends AdminController
         $type  = $raw['type'] ?? 'string';
         $value = $raw['value'] ?? '';
         $ttl   = isset($raw['ttl']) && (int)$raw['ttl'] > 0 ? (int)$raw['ttl'] : null;
+        $db    = isset($raw['db']) ? (int)$raw['db'] : 0;
 
         if ($key === '') return json(['success' => 0, 'message' => 'Key tidak boleh kosong.']);
 
         try {
+            $this->switchDb($db);
             // Delete existing to allow type changes
             if (Redis::exists($key)) Redis::del($key);
 
@@ -82,9 +88,11 @@ class RedisController extends AdminController
     {
         $raw = json_decode($request->rawBody(), true) ?: $request->post();
         $key = trim($raw['key'] ?? '');
+        $db  = isset($raw['db']) ? (int)$raw['db'] : 0;
         if ($key === '') return json(['success' => 0, 'message' => 'Key tidak boleh kosong.']);
 
         try {
+            $this->switchDb($db);
             Redis::del($key);
             return json(['success' => 1, 'message' => 'Key berhasil dihapus.']);
         } catch (\Throwable $e) {
@@ -98,9 +106,11 @@ class RedisController extends AdminController
         $raw    = json_decode($request->rawBody(), true) ?: $request->post();
         $oldKey = trim($raw['old_key'] ?? '');
         $newKey = trim($raw['new_key'] ?? '');
+        $db     = isset($raw['db']) ? (int)$raw['db'] : 0;
         if ($oldKey === '' || $newKey === '') return json(['success' => 0, 'message' => 'Key tidak boleh kosong.']);
 
         try {
+            $this->switchDb($db);
             Redis::rename($oldKey, $newKey);
             return json(['success' => 1, 'message' => 'Key berhasil diubah namanya.']);
         } catch (\Throwable $e) {
@@ -111,7 +121,10 @@ class RedisController extends AdminController
     // ── POST /panel/redis/flush ───────────────────────────────
     public function flush(Request $request)
     {
+        $raw = json_decode($request->rawBody(), true) ?: $request->post();
+        $db  = isset($raw['db']) ? (int)$raw['db'] : 0;
         try {
+            $this->switchDb($db);
             Redis::flushDB();
             return json(['success' => 1, 'message' => 'Database Redis berhasil dikosongkan.']);
         } catch (\Throwable $e) {
@@ -120,6 +133,12 @@ class RedisController extends AdminController
     }
 
     // ── Private helpers ───────────────────────────────────────────
+
+    private function switchDb(int $db): void
+    {
+        $db = max(0, min(15, $db));
+        Redis::select($db);
+    }
 
     private function resolveType(string $key): string
     {

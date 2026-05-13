@@ -51,11 +51,19 @@
         <div class="d-flex align-items-center gap-2 mb-3">
             <h3 class="mb-0"><?= $page_title ?></h3>
         </div>
-        <div class="d-flex justify-content-between gap-2">
+        <div class="d-flex justify-content-between gap-2 flex-wrap">
             <button class="btn btn-sm btn-outline-secondary" @click="toggleSidebar()" :title="sidebarOpen ? 'Tutup sidebar' : 'Buka sidebar'">
                 <i class="bi" :class="sidebarOpen ? 'bi-layout-sidebar-reverse' : 'bi-layout-sidebar'"></i>
             </button>
-            <div class="d-flex gap-2">
+            <div class="d-flex gap-2 flex-wrap align-items-center">
+                <div class="d-flex align-items-center gap-1">
+                    <label class="text-muted mb-0" style="font-size:12px;white-space:nowrap"><i class="bi bi-database me-1"></i>DB</label>
+                    <select class="form-select form-select-sm" style="width:80px" x-model.number="selectedDb" @change="onDbChange()">
+                        <template x-for="n in 16" :key="n - 1">
+                            <option :value="n - 1" x-text="n - 1"></option>
+                        </template>
+                    </select>
+                </div>
                 <button class="btn btn-sm btn-outline-primary" @click="loadKeys()" :disabled="loadingKeys">
                     <i class="bi bi-arrow-clockwise me-1" :class="{'spin': loadingKeys}"></i>Refresh
                 </button>
@@ -380,6 +388,7 @@ function redisBrowser() {
         // Sidebar state
         sidebarOpen: true,
         isMobile: false,
+        selectedDb:   0,
         pattern:      '*',
         allKeys:      [],
         filterText:   '',
@@ -436,10 +445,17 @@ function redisBrowser() {
         },
 
         // ── Sidebar ───────────────────────────────────────────────
+        async onDbChange() {
+            this.selectedKey = null;
+            this.keyInfo     = null;
+            this.allKeys     = [];
+            await this.loadKeys();
+        },
+
         async loadKeys() {
             this.loadingKeys = true;
             try {
-                const res = await axios.get('/panel/redis/keys', { params: { pattern: this.pattern } });
+                const res = await axios.get('/panel/redis/keys', { params: { pattern: this.pattern, db: this.selectedDb } });
                 if (res.data.success) {
                     this.allKeys = res.data.keys;
                     // Auto-expand if few keys
@@ -526,7 +542,7 @@ function redisBrowser() {
             redisAce         = null; // force Ace re-init for new key
             this.closeSidebar(); // close drawer on mobile
             try {
-                const res = await axios.get('/panel/redis/get', { params: { key } });
+                const res = await axios.get('/panel/redis/get', { params: { key, db: this.selectedDb } });
                 if (res.data.success) {
                     this.keyInfo  = res.data;
                     this.editKey  = res.data.key;
@@ -582,12 +598,12 @@ function redisBrowser() {
             try {
                 // Rename first if key name changed
                 if (this.editKey !== this.selectedKey) {
-                    const rv = await axios.post('/panel/redis/rename', { old_key: this.selectedKey, new_key: this.editKey });
+                    const rv = await axios.post('/panel/redis/rename', { old_key: this.selectedKey, new_key: this.editKey, db: this.selectedDb });
                     if (!rv.data.success) throw new Error(rv.data.message);
                     this.selectedKey = this.editKey;
                 }
 
-                const sv = await axios.post('/panel/redis/set', { key: this.editKey, type, value, ttl });
+                const sv = await axios.post('/panel/redis/set', { key: this.editKey, type, value, ttl, db: this.selectedDb });
                 if (!sv.data.success) throw new Error(sv.data.message);
 
                 // Refresh TTL display
@@ -606,7 +622,7 @@ function redisBrowser() {
             if (!this.selectedKey) return;
             if (!confirm(`Hapus key "${this.selectedKey}"?\nTindakan ini tidak dapat dibatalkan.`)) return;
             try {
-                await axios.post('/panel/redis/delete', { key: this.selectedKey });
+                await axios.post('/panel/redis/delete', { key: this.selectedKey, db: this.selectedDb });
                 this.selectedKey = null;
                 this.keyInfo     = null;
                 await this.loadKeys();
@@ -620,7 +636,7 @@ function redisBrowser() {
         async flushDb() {
             if (!confirm('Hapus SEMUA key di database Redis ini?\nTindakan ini tidak dapat dibatalkan!')) return;
             try {
-                await axios.post('/panel/redis/flush');
+                await axios.post('/panel/redis/flush', { db: this.selectedDb });
                 this.selectedKey = null;
                 this.keyInfo     = null;
                 this.allKeys     = [];
@@ -645,6 +661,7 @@ function redisBrowser() {
                 const res = await axios.post('/panel/redis/set', {
                     key: key.trim(), type, value: parsedValue,
                     ttl: ttl ? parseInt(ttl) : null,
+                    db: this.selectedDb,
                 });
                 if (!res.data.success) throw new Error(res.data.message);
                 this.showNewKey = false;
