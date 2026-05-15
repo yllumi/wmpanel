@@ -17,7 +17,7 @@ class Migrate extends Command
      */
     protected function configure()
     {
-
+        $this->addArgument('plugin', InputArgument::OPTIONAL, 'Plugin path', '');
     }
 
     /**
@@ -27,8 +27,18 @@ class Migrate extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        // run ./vendor/bin/phinx migrate
-        $command = './vendor/bin/phinx migrate --configuration=config/plugin/yllumi/wmpanel/migration.php';
+        $plugin = $input->getArgument('plugin');
+
+        // Pilah dulu path plugin
+        if($plugin == 'wmpanel') {
+            $pluginPath = 'vendor/yllumi/wmpanel/src';
+        } else {
+            $pluginPath = $plugin ? 'plugin/' . trim($plugin, '/') . '/' : '';
+        }
+        
+        $command = 'PLUGIN_PATH=' . escapeshellarg($pluginPath)
+            . ' ./vendor/bin/phinx migrate --configuration=vendor/yllumi/wmpanel/src/config/migration.php';
+
         exec($command, $outputLines, $returnVar);
         foreach ($outputLines as $line) {
             $output->writeln($line);

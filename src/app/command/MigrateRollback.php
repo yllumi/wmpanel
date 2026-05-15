@@ -17,7 +17,7 @@ class MigrateRollback extends Command
      */
     protected function configure()
     {
-        
+        $this->addArgument('plugin', InputArgument::OPTIONAL, 'Plugin path', '');
     }
 
     /**
@@ -27,8 +27,18 @@ class MigrateRollback extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $plugin = $input->getArgument('plugin');
+
+        // Pilah dulu path plugin
+        if($plugin == 'wmpanel') {
+            $pluginPath = 'vendor/yllumi/wmpanel/src';
+        } else {
+            $pluginPath = $plugin ? 'plugin/' . trim($plugin, '/') . '/' : '';
+        }
+
         // run ./vendor/bin/phinx rollback
-        $command = './vendor/bin/phinx rollback --configuration=config/plugin/yllumi/wmpanel/migration.php';
+        $command = 'PLUGIN_PATH=' . escapeshellarg($pluginPath)
+            . ' ./vendor/bin/phinx rollback --configuration=vendor/yllumi/wmpanel/src/config/migration.php';
         exec($command, $outputLines, $returnVar);
         foreach ($outputLines as $line) {
             $output->writeln($line);

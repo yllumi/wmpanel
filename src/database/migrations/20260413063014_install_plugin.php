@@ -18,7 +18,7 @@ final class InstallPlugin extends AbstractMigration
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-    public function change(): void
+    public function up(): void
     {
         if (!$this->hasTable('mein_options')) {
             $this->table('mein_options', [
@@ -136,5 +136,17 @@ final class InstallPlugin extends AbstractMigration
                 ->addIndex(['source_id'], ['unique' => true, 'name' => 'source_id'])
                 ->create();
         }
+    }
+
+    /**
+     * Migrate Down.
+     */
+    public function down(): void
+    {
+        $this->table('mein_options')->drop()->save();
+        $this->table('mein_role_privileges')->drop()->save();
+        $this->table('mein_roles')->drop()->save();
+        $this->table('mein_user_profile')->drop()->save();
+        $this->table('mein_users')->drop()->save();
     }
 }
