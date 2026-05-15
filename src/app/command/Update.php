@@ -29,16 +29,7 @@ class Update extends Install
     protected function runPackageMigrations(OutputInterface $output): bool
     {
         $projectRoot = base_path();
-        $rootConfigFile = $projectRoot . '/config/migration.php';
-        $pluginConfigDir = $projectRoot . '/config/plugin/yllumi/wmpanel';
         $migrationDir = $projectRoot . '/vendor/yllumi/wmpanel/src/database/migrations';
-        $pluginConfigFile = $pluginConfigDir . '/migration.php';
-        $configFile = is_file($rootConfigFile) ? $rootConfigFile : $pluginConfigFile;
-
-        if (!is_file($configFile)) {
-            $output->writeln('<error>[wmpanel]</error> migration config not found. Checked: ' . $rootConfigFile . ' and ' . $pluginConfigFile);
-            return false;
-        }
 
         $migrationFiles = glob($migrationDir . '/*.php') ?: [];
         if (!$migrationFiles) {
@@ -46,33 +37,10 @@ class Update extends Install
             return true;
         }
 
-        $baseConfig = include $configFile;
-        if (!is_array($baseConfig)) {
-            $output->writeln('<error>[wmpanel]</error> Invalid migration config format.');
-            return false;
-        }
-
-        if (!isset($baseConfig['paths']) || !is_array($baseConfig['paths'])) {
-            $baseConfig['paths'] = [];
-        }
-        $baseConfig['paths']['migrations'] = $migrationDir;
-
-        $tempConfigFile = tempnam(sys_get_temp_dir(), 'wmpanel_migration_');
-        if ($tempConfigFile === false) {
-            $output->writeln('<error>[wmpanel]</error> Unable to create temporary migration config.');
-            return false;
-        }
-
-        file_put_contents($tempConfigFile, "<?php\nreturn " . var_export($baseConfig, true) . ";\n");
-
-        $command = sprintf(
-            './vendor/bin/phinx migrate --configuration=%s',
-            escapeshellarg($tempConfigFile)
-        );
+        $command = 'PLUGIN_PATH=' . escapeshellarg('vendor/yllumi/wmpanel/src/')
+            . ' ./vendor/bin/phinx migrate --configuration=vendor/yllumi/wmpanel/src/config/migration.php';
 
         exec($command, $outputLines, $returnVar);
-        @unlink($tempConfigFile);
-
         foreach ($outputLines as $line) {
             $output->writeln($line);
         }
