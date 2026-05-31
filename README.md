@@ -2,6 +2,7 @@
 
 Panel administrasi siap pakai untuk framework [Webman](https://www.workerman.net/webman). Menyediakan autentikasi, manajemen pengguna, role & privilege berbasis YAML, dynamic entry CRUD, manajemen menu, pengaturan aplikasi, Redis browser, dan email sender—semua terintegrasi dalam satu package.
 
+**Package ini tidak dilanjutkan. Silakan lihat package baru untuk fitur serupa ini di https://github.com/yllumi/sayagi**
 ---
 
 ## Daftar Isi
